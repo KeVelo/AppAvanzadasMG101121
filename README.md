@@ -1,70 +1,84 @@
-# Getting Started with Create React App
+Esta aplicación es un proyecto web sencillo que muestra noticias en tiempo real utilizando la API de NewsAPI. Los datos se actualizan automáticamente cada 10 segundos, mostrando noticias de última hora.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Características
 
-## Available Scripts
+Visualización de Noticias: Muestra el título, la descripción, y el enlace a las noticias más recientes.
 
-In the project directory, you can run:
+Actualización Automática: Los datos se actualizan automáticamente cada 10 segundos sin necesidad de recargar la página.
 
-### `npm start`
+Interfaz Moderna: Un diseño simple pero elegante, enfocado en la presentación clara de la información.
+Tecnologías Utilizadas
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+React: Para el desarrollo de la interfaz de usuario.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Axios: Para realizar solicitudes HTTP a la API.
 
-### `npm test`
+NewsAPI: Para obtener las noticias más recientes.
+Requisitos
+Node.js (v14 o superior)
+npm (v6 o superior)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build`
+Instalación
+Sigue estos pasos para instalar y ejecutar la aplicación en tu entorno local:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Clona el repositorio:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+git clone https://github.com/KeVelo/AppAvanzadasMG101121.git
+cd parcialnoticias
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Instala las dependencias:
+npm install
 
-### `npm run eject`
+Configura la API Key de NewsAPI:
+Obtén una API Key gratuita desde NewsAPI. Luego, crea un archivo .env en la raíz del proyecto con la siguiente línea:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+REACT_APP_NEWS_API_KEY=tu_apikey
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Ejecuta la aplicación:
+npm start
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+La aplicación se abrirá en http://localhost:3000.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
+Descripción de la API
+La aplicación utiliza la NewsAPI para obtener las noticias más recientes. NewsAPI permite obtener titulares de diversas fuentes de noticias, filtrados por país, categoría, y otras opciones.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Ejemplo de solicitud a la API:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+https://newsapi.org/v2/top-headlines?country=us&apiKey=tu_apikey
 
-### Code Splitting
+Endpoint: https://newsapi.org/v2/top-headlines
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Parámetros:
 
-### Analyzing the Bundle Size
+country: Código del país (ej. us para Estados Unidos)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+apiKey: Tu clave de API de NewsAPI
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Cómo se Conectó la Aplicación a la API
 
-### Advanced Configuration
+La aplicación se conecta a la API de NewsAPI utilizando Axios para realizar solicitudes HTTP GET. Los datos obtenidos se almacenan en el estado de React, y se actualizan automáticamente cada 10 segundos usando un temporizador.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Código de Ejemplo:
 
-### Deployment
+useEffect(() => {
+  const obtenerNoticias = async () => {
+    try {
+      const respuesta = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${process.env.REACT_APP_NEWS_API_KEY}`);
+      setNoticias(respuesta.data.articles);
+    } catch (error) {
+      console.error("Error al obtener datos:", error);
+    }
+  };
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+  obtenerNoticias();
+  const intervalo = setInterval(obtenerNoticias, 10000);
 
-### `npm run build` fails to minify
+  return () => clearInterval(intervalo);
+}, []);
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Visualización de Datos en Tiempo Real
+
+Los datos se visualizan en una lista que muestra el título, la descripción, y un enlace para leer más detalles de cada noticia. La aplicación actualiza esta lista automáticamente cada 10 segundos, lo que permite ver las noticias más recientes en tiempo real sin necesidad de recargar la página.
